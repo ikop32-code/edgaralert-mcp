@@ -31,6 +31,12 @@ export function registerGetCompanyProfile(server: McpServer, client: EdgarAlertC
         "edgaralert_get_company_fundamentals; for a single bundled research-agent payload use " +
         "edgaralert_get_company_agent_context.",
       inputSchema: inputShape,
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: true,
+      },
     },
     async (input: Input) => {
       try {

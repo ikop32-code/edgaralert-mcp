@@ -55,6 +55,12 @@ export function registerSearchAlerts(server: McpServer, client: EdgarAlertClient
         "targeted research questions like 'show me large-cap insider buys in tech this month' " +
         "rather than a general recent-activity feed (use edgaralert_get_latest_alerts for that).",
       inputSchema: inputShape,
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: true,
+      },
     },
     async (input: Input) => {
       try {

@@ -32,6 +32,12 @@ export function registerSearchCompanies(server: McpServer, client: EdgarAlertCli
         "calling edgaralert_get_company_profile, edgaralert_get_company_fundamentals, or " +
         "edgaralert_get_company_agent_context. Requires EDGAR Alert PRO plan or higher.",
       inputSchema: inputShape,
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: true,
+      },
     },
     async (input: Input) => {
       if (!input.query && !input.ticker && !input.sicCode) {

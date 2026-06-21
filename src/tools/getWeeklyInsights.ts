@@ -13,6 +13,12 @@ export function registerGetWeeklyInsights(server: McpServer, client: EdgarAlertC
         "for the week. Good for broad 'what's the market doing' questions before drilling into " +
         "a specific company or sector.",
       inputSchema: {},
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: true,
+      },
     },
     async () => {
       try {

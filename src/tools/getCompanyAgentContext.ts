@@ -39,6 +39,12 @@ export function registerGetCompanyAgentContext(server: McpServer, client: EdgarA
         "combining edgaralert_get_company_profile + edgaralert_get_company_fundamentals + " +
         "edgaralert_search_alerts when you need a full picture of one company in one call.",
       inputSchema: inputShape,
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: true,
+      },
     },
     async (input: Input) => {
       try {
