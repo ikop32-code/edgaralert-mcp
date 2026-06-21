@@ -1,14 +1,19 @@
 {
   "name": "@edgaralert/mcp-server",
-  "version": "0.1.0",
-  "description": "Official Model Context Protocol (MCP) server for EDGAR Alert. Enterprise-plan only. Thin, read-only wrapper around the public EDGAR Alert v1 API.",
-  "license": "UNLICENSED",
-  "private": true,
+  "version": "1.0.0",
+  "description": "Official Model Context Protocol (MCP) server for EDGAR Alert. Thin, read-only wrapper around the public EDGAR Alert v1 API.",
+  "license": "MIT",
+  "private": false,
   "type": "module",
   "main": "dist/index.js",
   "bin": {
     "edgaralert-mcp": "dist/index.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ikop32-code/edgaralert-mcp.git"
+  },
+  "homepage": "https://www.edgaralert.com",
   "files": [
     "dist"
   ],
