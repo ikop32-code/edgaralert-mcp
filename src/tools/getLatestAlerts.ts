@@ -60,6 +60,12 @@ export function registerGetLatestAlerts(server: McpServer, client: EdgarAlertCli
         "multi-filter searches (by ticker, sector, market cap, date range), use " +
         "edgaralert_search_alerts instead.",
       inputSchema: inputShape,
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: true,
+      },
     },
     async (input: Input) => {
       try {
