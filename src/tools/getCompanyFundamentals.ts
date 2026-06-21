@@ -26,6 +26,12 @@ export function registerGetCompanyFundamentals(server: McpServer, client: EdgarA
         "filings. Requires EDGAR Alert PRO plan or higher. Use edgaralert_get_company_profile " +
         "first if you just need the latest snapshot rather than multi-year history.",
       inputSchema: inputShape,
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: true,
+      },
     },
     async (input: Input) => {
       try {
