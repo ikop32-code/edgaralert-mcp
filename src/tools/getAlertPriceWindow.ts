@@ -27,6 +27,12 @@ export function registerGetAlertPriceWindow(server: McpServer, client: EdgarAler
         "Requires an alert id from edgaralert_search_alerts or edgaralert_get_latest_alerts. " +
         "Requires EDGAR Alert PRO plan or higher.",
       inputSchema: inputShape,
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: true,
+      },
     },
     async (input: Input) => {
       try {
