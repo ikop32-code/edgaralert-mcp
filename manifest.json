@@ -1,0 +1,53 @@
+{
+  "manifest_version": "0.4",
+  "name": "edgaralert-mcp",
+  "display_name": "EDGAR Alert",
+  "version": "1.0.0",
+  "description": "Ask Claude live questions about SEC insider trading signals, Form 4 activity, 8-K officer/director changes, and company research context.",
+  "long_description": "Connects Claude to your EDGAR Alert account via the official, read-only EDGAR Alert v1 API. Search and explore insider trading alerts, company profiles, fundamentals, and AI-ready company research context directly in conversation. Most tools work on any paid EDGAR Alert plan; the bundled AI research-context tool requires Enterprise. Your API key is stored securely by Claude Desktop and is never written to disk by this extension.",
+  "author": {
+    "name": "EDGAR Alert",
+    "url": "https://www.edgaralert.com"
+  },
+  "homepage": "https://www.edgaralert.com",
+  "documentation": "https://www.edgaralert.com/docs/integrations/mcp",
+  "support": "https://www.edgaralert.com/about",
+  "license": "MIT",
+  "icon": "icon.png",
+  "server": {
+    "type": "node",
+    "entry_point": "dist/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/dist/index.js"],
+      "env": {
+        "EDGARALERT_API_KEY": "${user_config.api_key}"
+      }
+    }
+  },
+  "user_config": {
+    "api_key": {
+      "type": "string",
+      "title": "EDGAR Alert API Key",
+      "description": "Your EDGAR Alert API key (find it at edgaralert.com/account/api-keys). Most tools work on any paid plan; the AI research-context tool requires Enterprise and will show a clear upgrade message if your plan doesn't include it.",
+      "sensitive": true,
+      "required": true
+    }
+  },
+  "compatibility": {
+    "platforms": ["darwin", "win32", "linux"],
+    "runtimes": {
+      "node": ">=18.17.0"
+    }
+  },
+  "tools": [
+    { "name": "edgaralert_get_latest_alerts", "description": "Returns the most recent insider trading alerts." },
+    { "name": "edgaralert_search_alerts", "description": "Searches insider trading alerts with detailed filters." },
+    { "name": "edgaralert_get_alert_price_window", "description": "Returns price performance around a specific alert." },
+    { "name": "edgaralert_search_companies", "description": "Searches companies by name, ticker, sector, or other criteria." },
+    { "name": "edgaralert_get_company_profile", "description": "Returns a company profile with market, fundamentals, and insider summary." },
+    { "name": "edgaralert_get_company_fundamentals", "description": "Returns historical company fundamentals." },
+    { "name": "edgaralert_get_company_agent_context", "description": "Returns AI-ready bundled company research context (Enterprise)." },
+    { "name": "edgaralert_get_weekly_insights", "description": "Returns a market-wide weekly insider trading summary." }
+  ]
+}
