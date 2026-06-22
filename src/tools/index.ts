@@ -9,6 +9,7 @@ import { registerGetCompanyProfile } from "./getCompanyProfile.js";
 import { registerGetCompanyFundamentals } from "./getCompanyFundamentals.js";
 import { registerGetCompanyAgentContext } from "./getCompanyAgentContext.js";
 import { registerGetWeeklyInsights } from "./getWeeklyInsights.js";
+import { registerGetIndustryCapitalFlow } from "./getIndustryCapitalFlow.js";
 
 /**
  * Registers every MVP tool. Each tool is a thin wrapper around exactly
@@ -26,4 +27,5 @@ export function registerAllTools(server: McpServer, client: EdgarAlertClient): v
   registerGetCompanyFundamentals(server, client);
   registerGetCompanyAgentContext(server, client);
   registerGetWeeklyInsights(server, client);
+  registerGetIndustryCapitalFlow(server, client);
 }
