@@ -9,13 +9,16 @@ export function registerGetIndustryCapitalFlow(server: McpServer, client: EdgarA
       title: "Get 12-week insider capital flow by industry",
       description:
         "Returns 12-week rolling insider capital flow (insider buy value minus sell value) " +
-        "for the top 6 most active industries by absolute net insider score. Each row contains " +
-        "weekStartDate, weekEndDate, sicCode, sicName, buyValue, sellValue, and netCapitalFlow. " +
+        "for the top 6 most active FF48 industry groups by absolute net insider score. " +
+        "Each row contains weekStartDate, weekEndDate, ff48Code, ff48Description, sectorCode, sectorName, " +
+        "buyValue, sellValue, and netCapitalFlow. Industries are grouped using the Fama-French 48 " +
+        "classification (e.g. 'Pharmaceutical Products', 'Computers', 'Banking') nested under 11 " +
+        "GICS-like sectors (e.g. 'Health Care', 'Technology', 'Financials'). " +
         "Use this to identify sustained sector rotation — which industries insiders have been " +
         "consistently buying into or selling out of over the past quarter, not just the latest week. " +
         "Complements edgaralert_get_weekly_insights (single week snapshot) with multi-week trend data. " +
-        "Good for questions like: 'which sectors have had sustained insider buying over the past 3 months?' " +
-        "or 'is the tech selloff a one-week event or a multi-week trend?'",
+        "Good for questions like: 'which industries have had sustained insider buying over the past 3 months?' " +
+        "or 'is the tech selloff concentrated in semiconductors or broad across the sector?'",
       inputSchema: {},
       annotations: {
         readOnlyHint: true,
