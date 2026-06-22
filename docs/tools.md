@@ -164,7 +164,7 @@ boundary signal), 404 if company not found, 429.
 
 ## `edgaralert_get_weekly_insights`
 
-Market-wide weekly summary: most bullish/bearish industries, top
+Market-wide weekly summary: most bullish/bearish FF48 industries, top
 buying/selling companies. **Public endpoint — no plan requirement.**
 
 - **Endpoint:** `GET /api/insights/weekly`
@@ -172,9 +172,48 @@ buying/selling companies. **Public endpoint — no plan requirement.**
 
 **Input:** none.
 
-**Output:** `{latestWeekStartDate, latestWeekEndDate, summary,
-bullishIndustries: [], bearishIndustries: [], topBuyingCompanies: [],
-topSellingCompanies: []}`
+**Output:**
+
+```json
+{
+  "latestWeekStartDate": "2026-06-16",
+  "latestWeekEndDate":   "2026-06-22",
+  "summary": {
+    "totalBuyAlerts":           42,
+    "totalSellAlerts":          18,
+    "mostBullishIndustry":      "Pharmaceutical Products",
+    "mostBullishSector":        "Health Care",
+    "mostBullishNetScore":      310,
+    "mostBearishIndustry":      "Computers",
+    "mostBearishSector":        "Technology",
+    "mostBearishNetScore":      -140,
+    "strongestCompanyTicker":   "MRNA",
+    "strongestCompanyName":     "Moderna Inc.",
+    "strongestCompanyNetScore": 95
+  },
+  "bullishIndustries": [
+    {
+      "ff48Code":        "FF48_13",
+      "ff48Name":        "Drugs",
+      "ff48Description": "Pharmaceutical Products",
+      "sectorCode":      "HEALTH",
+      "sectorName":      "Health Care",
+      "buyAlertCount":   12,
+      "sellAlertCount":  2,
+      "netScore":        310,
+      "buyValue":        4200000.00,
+      "sellValue":       180000.00
+    }
+  ],
+  "bearishIndustries":   [ "...same shape..." ],
+  "topBuyingCompanies":  [ "...company shape..." ],
+  "topSellingCompanies": [ "...company shape..." ]
+}
+```
+
+Industries are grouped using the **Fama-French 48 (FF48)** classification
+nested under 11 GICS-like sectors. The `FF48_48` "Other / Almost Nothing"
+catch-all bucket is excluded from all rankings.
 
 **Errors:** 429 only (subject to the global rate limiter, not plan gating).
 
@@ -183,19 +222,36 @@ topSellingCompanies: []}`
 ## `edgaralert_get_industry_capital_flow`
 
 12-week rolling insider capital flow (buy value minus sell value) for the
-top 6 most active industries. Complements `get_weekly_insights` with
-multi-week trend data. **Public endpoint — no plan requirement.**
+top 6 most active FF48 industry groups. Complements `get_weekly_insights`
+with multi-week trend data. **Public endpoint — no plan requirement.**
 
 - **Endpoint:** `GET /api/insights/capital-flow`
 - **Min. plan:** none (public)
 
 **Input:** none.
 
-**Output:** array of rows — one per industry per week — each containing
-`weekStartDate`, `weekEndDate`, `sicCode`, `sicName`, `buyValue`,
-`sellValue`, `netCapitalFlow`. Good for questions like "which sectors have
-had sustained insider buying over the past 3 months?" or "is the tech
-selloff a one-week event or a multi-week trend?"
+**Output:** array of rows — one per FF48 industry per week — each containing:
+
+| Field            | Type    | Example                    | Notes                              |
+| ---------------- | ------- | -------------------------- | ---------------------------------- |
+| `weekStartDate`  | string  | `"2026-06-16"`             | ISO date, Monday-anchored          |
+| `weekEndDate`    | string  | `"2026-06-22"`             |                                    |
+| `ff48Code`       | string  | `"FF48_13"`                | Fama-French 48 identifier          |
+| `ff48Description`| string  | `"Pharmaceutical Products"`| Human-readable FF48 industry label |
+| `sectorCode`     | string  | `"HEALTH"`                 | GICS-like sector code              |
+| `sectorName`     | string  | `"Health Care"`            | GICS-like sector name              |
+| `buyValue`       | decimal | `4200000.00`               | Aggregate insider buy value ($)    |
+| `sellValue`      | decimal | `180000.00`                | Aggregate insider sell value ($)   |
+| `netCapitalFlow` | decimal | `4020000.00`               | `buyValue - sellValue`             |
+
+Rows are ordered by `ff48Description` then `weekStartDate`, giving stable
+column ordering for heatmap rendering. The `FF48_48` "Other" catch-all is
+excluded. The 6 industries shown are those with the highest absolute net
+insider score in the most recent completed week.
+
+Good for questions like "which industries have had sustained insider buying
+over the past 3 months?" or "is the tech selloff concentrated in
+semiconductors or broad across the sector?"
 
 **Errors:** 429 only.
 
