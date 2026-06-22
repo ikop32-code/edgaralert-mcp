@@ -57,7 +57,7 @@ export class EdgarAlertClient {
    * omitted entirely so optional filters don't get sent as "undefined".
    */
   async get<T>(path: string, query: Record<string, unknown> = {}): Promise<T> {
-    return this.request<T>(`${this.baseUrl}/${path.replace(/^\/+/, "")}`, query);
+    return this.request<T>("GET", `${this.baseUrl}/${path.replace(/^\/+/, "")}`, query);
   }
 
   /**
@@ -67,10 +67,30 @@ export class EdgarAlertClient {
    * auth header, same error handling as get(); only the path base differs.
    */
   async getAbsolute<T>(path: string, query: Record<string, unknown> = {}): Promise<T> {
-    return this.request<T>(`${this.apiRoot}/${path.replace(/^\/+/, "")}`, query);
+    return this.request<T>("GET", `${this.apiRoot}/${path.replace(/^\/+/, "")}`, query);
   }
 
-  private async request<T>(baseUrl: string, query: Record<string, unknown>): Promise<T> {
+  /**
+   * Issues a POST request against api/v1/<path> with a JSON body.
+   */
+  async post<T>(path: string, body: Record<string, unknown> = {}): Promise<T> {
+    return this.request<T>("POST", `${this.baseUrl}/${path.replace(/^\/+/, "")}`, {}, body);
+  }
+
+  /**
+   * Issues a DELETE request against api/v1/<path>.
+   * Returns null for 204 No Content responses (successful delete).
+   */
+  async delete<T>(path: string): Promise<T | null> {
+    return this.request<T>("DELETE", `${this.baseUrl}/${path.replace(/^\/+/, "")}`, {});
+  }
+
+  private async request<T>(
+    method: string,
+    baseUrl: string,
+    query: Record<string, unknown>,
+    body?: Record<string, unknown>,
+  ): Promise<T> {
     const url = new URL(baseUrl);
 
     for (const [key, value] of Object.entries(query)) {
@@ -82,15 +102,22 @@ export class EdgarAlertClient {
       }
     }
 
+    const headers: Record<string, string> = {
+      "X-API-Key": this.apiKey,
+      Accept: "application/json",
+      "User-Agent": "edgaralert-mcp-server/0.1.0",
+    };
+
+    if (body !== undefined) {
+      headers["Content-Type"] = "application/json";
+    }
+
     let response: Response;
     try {
       response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "X-API-Key": this.apiKey,
-          Accept: "application/json",
-          "User-Agent": "edgaralert-mcp-server/0.1.0",
-        },
+        method,
+        headers,
+        body: body !== undefined ? JSON.stringify(body) : undefined,
       });
     } catch (err) {
       throw new EdgarAlertApiError(
@@ -99,6 +126,11 @@ export class EdgarAlertClient {
         0,
         "network",
       );
+    }
+
+    // 204 No Content — successful delete, nothing to parse
+    if (response.status === 204) {
+      return null as T;
     }
 
     if (response.ok) {
@@ -118,8 +150,8 @@ export class EdgarAlertClient {
       return (await response.json()) as T;
     }
 
-    const body = await safeParseJson<ApiErrorBody>(response);
-    const apiMessage = body?.message;
+    const errorBody = await safeParseJson<ApiErrorBody>(response);
+    const apiMessage = errorBody?.message;
 
     switch (response.status) {
       case 401:

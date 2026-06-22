@@ -10,6 +10,9 @@ import { registerGetCompanyFundamentals } from "./getCompanyFundamentals.js";
 import { registerGetCompanyAgentContext } from "./getCompanyAgentContext.js";
 import { registerGetWeeklyInsights } from "./getWeeklyInsights.js";
 import { registerGetIndustryCapitalFlow } from "./getIndustryCapitalFlow.js";
+import { registerGetTickerLists } from "./getTickerLists.js";
+import { registerAddTickerToList } from "./addTickerToList.js";
+import { registerRemoveTickerFromList } from "./removeTickerFromList.js";
 
 /**
  * Registers every MVP tool. Each tool is a thin wrapper around exactly
@@ -19,13 +22,23 @@ import { registerGetIndustryCapitalFlow } from "./getIndustryCapitalFlow.js";
  * line here.
  */
 export function registerAllTools(server: McpServer, client: EdgarAlertClient): void {
+  // Alert feed
   registerGetLatestAlerts(server, client);
   registerSearchAlerts(server, client);
   registerGetAlertPriceWindow(server, client);
+
+  // Company research
   registerSearchCompanies(server, client);
   registerGetCompanyProfile(server, client);
   registerGetCompanyFundamentals(server, client);
   registerGetCompanyAgentContext(server, client);
+
+  // Market insights
   registerGetWeeklyInsights(server, client);
   registerGetIndustryCapitalFlow(server, client);
+
+  // Watchlist management
+  registerGetTickerLists(server, client);
+  registerAddTickerToList(server, client);
+  registerRemoveTickerFromList(server, client);
 }
