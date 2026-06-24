@@ -1,6 +1,6 @@
 {
   "name": "@edgaralert/mcp-server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "mcpName": "io.github.ikop32-code/edgaralert",
   "description": "Official Model Context Protocol (MCP) server for EDGAR Alert. Thin, read-only wrapper around the public EDGAR Alert v1 API.",
   "license": "MIT",
